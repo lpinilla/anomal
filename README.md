@@ -5,8 +5,8 @@
 
 The Anomal Framework is a system to aid defenders to detect anomalies on any signal they want. It's designed to be modular, easy to use, and composable.
 
+https://user-images.githubusercontent.com/10984467/191376685-0dcf70f7-a857-4ddd-8465-266824648d89.mp4
 
-[video1]
 
 # Why?
 
@@ -183,8 +183,7 @@ The first section is the main one and gives you information about clustering. Yo
 ## Second Section
 
 
-
-[video2]
+https://user-images.githubusercontent.com/10984467/191376723-5bd618ec-5b06-4b94-9a24-918a5ead1dea.mp4
 
 
 
@@ -193,8 +192,7 @@ The second section is designed to help the user understand how each feature cont
 ## Third Section
 
 
-[video3]
-
+https://user-images.githubusercontent.com/10984467/191376739-2143b4da-e064-41fa-847a-51e217e31a28.mp4
 
 
 The last section is focus on the records that trigged the flags. As flags should be a direct indicator of compromise, one could see the details of each individual flag and even download the sample if needed.

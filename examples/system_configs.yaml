@@ -1,0 +1,9 @@
+data:
+  in_path: dns_logs_example.csv
+  out_path: results.csv
+features:
+  path: dns_features.yaml
+setup:
+  classification_engine: Gower
+  input_driver: CSV
+  output_driver: CSV

@@ -114,7 +114,8 @@ class FeatureEngine():
         for s in sections:
             if s in yaml_data:
                 for f in yaml_data[s]:
-                    for dn in f['data_needed'].split(','):
+                    data_needed = f['data_needed'] if 'data_needed' in f.keys() else f['name']
+                    for dn in data_needed.split(','):
                         if dn not in headers:
                             raise self.ValidationError('%s %s needs %s, which is not in the given dataset' % (s[:-1], f['name'], dn))
                     if 'function_code' in f.keys() and not f['function_code']:
@@ -154,7 +155,8 @@ class FeatureEngine():
         if 'type' not in feature:
             raise self.ValidationError('The feature %s was included without declaring its type.' % feature['name'])
         if 'data_needed' not in feature:
-            raise self.ValidationError('The feature %s was included without declaring the data needed to use it' % feature['name'])
+            if feature['type'] != 'field':
+                raise self.ValidationError('The feature %s was included without declaring the data needed to use it' % feature['name'])
         if 'multiplier' not in feature:
             raise self.ValidationError('No multiplier was specified for the feature %s' % feature['name'])
         if type(feature['multiplier']) != int:
@@ -177,6 +179,8 @@ class FeatureEngine():
             else: #metric or flag type
                 impl=implemented_metrics[f['name']] if f['name'] in implemented_metrics else self.create_func_obj(f['function_code'])
                 params = f['params'] if 'params' in f.keys() else {}
+                if 'data_needed' not in f.keys():
+                    f['data_needed'] = f['name']
                 metrics_to_apply += [{
                     'name': f['name'],
                     'data_needed' : f['data_needed'],

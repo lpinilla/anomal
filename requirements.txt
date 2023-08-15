@@ -15,6 +15,6 @@ gitpython
 plotly
 numpy
 scipy
-sklearn
+scikit-learn
 pandas
 pytest

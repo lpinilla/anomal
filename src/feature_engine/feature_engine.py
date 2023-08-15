@@ -80,6 +80,7 @@ class FeatureEngine():
         filters = []
         selected_features = []
         metrics_to_apply = []
+        flags = []
         if 'plugins' in yaml_data.keys():
             #load plugins
             self.plugin_loader.load_plugin(yaml_data['plugins'])
@@ -262,6 +263,7 @@ class FeatureEngine():
             flags_results.append(f)
         return flags_results
 
+    # Grab selected features or apply metrics
     def apply_features(self, df, selected_fields, metrics, headers):
         for f in metrics:
             needed = f['data_needed'].split(',')
@@ -306,18 +308,26 @@ class FeatureEngine():
         except self.ValidationError as e:
             sys.exit(e)
         #apply features
+        df = None
         if not self.in_real_time:
+            #Read static data
             df_original = self.in_driver.get_data()
+            #Apply filters if they exist
             if len(filters) > 0: self.apply_filters(df_original, filters)
+            #Grab selected features
             if len(selected_features) == 0:
-                df = None
                 if len(flags) > 0: flags_results = self.run_flags(df_original, flags)
             else:
-                df = df_original.copy() #TODO optimization: check if no flags are going to be applied
-                if len(flags) > 0: flags_results = self.run_flags(df, flags)
+                if len(flags) > 0:
+                    df = df_original.copy()
+                    flags_results = self.run_flags(df, flags)
+                else:
+                    df = df_original
+                    flags_results = []
                 self.apply_features(df, selected_features, metrics, headers)
         else:
             df, flags_results = self.realtime_processing(self.in_driver, selected_features, metrics, headers, self.in_driver.collection_time)
+        #we have the data, we can disconnect from source
         self.in_driver.disconnect()
         if self.save_results:
             if df is not None: self.out_driver.save(df, 'behavior_analysis.csv')

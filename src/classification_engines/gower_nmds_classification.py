@@ -14,7 +14,11 @@ class GowerNMDS():
 
     def setup(self, df, weights):
         self.weights_ = weights
-        self.raw_matrix_ = gower.gower_matrix(df, weight=self.weights_)
+        try:
+            self.raw_matrix_ = gower.gower_matrix(df, weight=self.weights_)
+        except IndexError as e:
+            print('There was an error building the matrix, check that the columns are ok')
+            exit(e)
 
     def matrix_to_dataframe(self):
         return pd.DataFrame(self.raw_matrix_)

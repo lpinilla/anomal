@@ -7,7 +7,7 @@ RUN apt update && python3 -m pip install --upgrade pip &&  \
 
 ENV PATH="/opt/venv/bin:$PATH"
 
-COPY src/ ./
+COPY requirements.txt ./
 
 #Framework dependencies
 RUN python3 -m venv /opt/venv && pip3 install --no-cache-dir -r requirements.txt
@@ -18,5 +18,8 @@ COPY src/dendrogram_update.patch ./
 RUN patch /opt/venv/lib/python3.8/site-packages/plotly/figure_factory/_dendrogram.py dendrogram_update.patch
 
 RUN apt purge -y patch && apt autoremove -y && apt clean -y && rm -rf /var/lib/apt/lists/*
+
+#Copy project as last step to allow rapid prototyping
+COPY src/ ./
 
 ENTRYPOINT ["python3", "tui.py"]
